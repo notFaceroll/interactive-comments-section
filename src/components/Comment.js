@@ -1,24 +1,11 @@
+import React, { useState, Fragment } from 'react';
 import styled from 'styled-components';
 import { Card } from './Card';
 
 import userProfilePic from '../assets/avatars/image-amyrobson.png';
-
-const Rating = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: hsl(228, 33%, 97%);
-  border-radius: 5px;
-  height: 100%;
-  padding: 0.5rem;
-  button {
-    border: none;
-    background-color: transparent;
-    padding: 1rem 0;
-    cursor: pointer;
-  }
-`;
+import replyIcon from '../assets/icon-reply.svg';
+import Rating from './Rating/Rating';
+import Reply from './Reply';
 
 const User = styled.div`
   display: flex;
@@ -33,32 +20,43 @@ const User = styled.div`
   img {
     display: block;
     max-width: 100%;
+    cursor: pointer;
+  }
+
+  div {
+    margin-right: auto;
   }
 `;
 
 const Comment = (props) => {
-  console.log(props.picture);
+  const [isReplying, setIsReplying] = useState(false);
+  const replyHandler = () => {
+    setIsReplying(!isReplying);
+  };
+
   return (
-    <Card>
-      <Rating>
-        <button>+</button>
-        <span>{props.score}</span>
-        <button>-</button>
-      </Rating>
-      <div>
-        <User>
-          <figure>
-            <img src={`${props.picture}`} />
-          </figure>
-          <p>{props.username}</p>
-          <div>{props.date}</div>
-        </User>
-        <p>
-          {props.replyingTo && <span>@{props.replyingTo}</span>}
-          {props.content}
-        </p>
-      </div>
-    </Card>
+    <Fragment>
+      <Card>
+        <Rating score={props.score} />
+        <div>
+          <User>
+            <figure>
+              <img src={`${props.picture}`} />
+            </figure>
+            <p>{props.username}</p>
+            <div>{props.date}</div>
+            <figure onClick={replyHandler}>
+              <img src={replyIcon} />
+            </figure>
+          </User>
+          <p>
+            {props.replyingTo && <strong>@{props.replyingTo}</strong>}{' '}
+            {props.content}
+          </p>
+        </div>
+      </Card>
+      {isReplying && <Reply />}
+    </Fragment>
   );
 };
 

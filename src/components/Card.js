@@ -10,9 +10,8 @@ export const Card = styled.li`
   padding: .5rem;
   gap: 1rem;
 
-  span {
+  strong {
       color: blue;
-      font-weight: 700;
   }
 `;
 

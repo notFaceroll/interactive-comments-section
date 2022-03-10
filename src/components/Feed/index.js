@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Comment from '../Comment';
 
@@ -16,15 +17,20 @@ const List = styled.ul`
 
 const ReplyList = styled.ul`
   margin: 0 auto;
-  width: 100%;
+  width: 93%;
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  border: 2px solid red;
 `;
 
 const Feed = (props) => {
+  const [userReply, setUserReply] = useState(false);
+
+  const replyHandle = () => {
+    setUserReply(!userReply);
+  };
+
   return (
     <List>
       {comments.map((item, index) => (
