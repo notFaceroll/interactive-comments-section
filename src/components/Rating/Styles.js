@@ -9,11 +9,12 @@ export const ButtonHolder = styled.div`
   border-radius: 5px;
   height: 100%;
   padding: 0.5rem;
+  font-weight: bold;
 `;
 
 export const Button = styled.button`
   border: none;
   background-color: transparent;
-  padding: 1rem 0;
+  padding: .7rem;
   cursor: pointer;
 `;

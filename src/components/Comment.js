@@ -41,7 +41,7 @@ const Comment = (props) => {
         <div>
           <User>
             <figure>
-              <img src={`${props.picture}`} />
+              <img src={props.picture} />
             </figure>
             <p>{props.username}</p>
             <div>{props.date}</div>

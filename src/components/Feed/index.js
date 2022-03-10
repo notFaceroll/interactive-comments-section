@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Comment from '../Comment';
 
-import data from '../../data.json';
+import { userData } from '../../assets/userData';
+import Reply from '../Reply';
 
-const { comments } = data;
+const { comments } = userData;
 
 const List = styled.ul`
   margin: 0 auto;
-  width: clamp(10rem, 50vw, 1000px);
+  width: clamp(10rem, 40vw, 800px);
   list-style: none;
   display: flex;
   flex-direction: column;
@@ -25,12 +26,6 @@ const ReplyList = styled.ul`
 `;
 
 const Feed = (props) => {
-  const [userReply, setUserReply] = useState(false);
-
-  const replyHandle = () => {
-    setUserReply(!userReply);
-  };
-
   return (
     <List>
       {comments.map((item, index) => (
@@ -60,6 +55,7 @@ const Feed = (props) => {
           )}
         </>
       ))}
+      <Reply label="send" />
     </List>
   );
 };
