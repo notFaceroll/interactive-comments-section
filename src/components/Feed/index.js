@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Comment from '../Comment';
 
 import { userData } from '../../assets/userData';
-import Reply from '../Reply';
+import Reply from '../NewReply';
 
-const { comments } = userData;
+const comments = userData.comments;
 
 const List = styled.ul`
   margin: 0 auto;
@@ -16,44 +16,30 @@ const List = styled.ul`
   gap: 1rem;
 `;
 
-const ReplyList = styled.ul`
-  margin: 0 auto;
-  width: 93%;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
+const Feed = () => {
+  const [commentsData, setCommentsData] = useState([]);
+  // console.log(comments);
+  // console.log(commentsData);
 
-const Feed = (props) => {
+  useEffect(() => {
+    setCommentsData(comments);
+  }, []);
+
+  // console.log('feed refresh');
   return (
     <List>
-      {comments.map((item, index) => (
-        <>
-          <Comment
-            key={index}
-            score={item.score}
-            content={item.content}
-            username={item.user.username}
-            picture={item.user.image.png}
-            date={item.createdAt}
-          />
-          {item.replies.length > 0 && (
-            <ReplyList>
-              {item.replies.map((reply, idx) => (
-                <Comment
-                  key={idx}
-                  score={reply.score}
-                  content={reply.content}
-                  username={reply.user.username}
-                  picture={reply.user.image.png}
-                  date={reply.createdAt}
-                  replyingTo={reply.replyingTo}
-                />
-              ))}
-            </ReplyList>
-          )}
-        </>
+      {commentsData.map((item, index) => (
+        <Comment
+          key={index}
+          index={index}
+          content={item.content}
+          date={item.createdAt}
+          id={item.id}
+          replies={item.replies}
+          score={item.score}
+          username={item.user.username}
+          picture={item.user.image.png}
+        />
       ))}
       <Reply label="send" />
     </List>
