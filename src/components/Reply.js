@@ -1,10 +1,11 @@
 import React, { useState, Fragment } from 'react';
+
 import styled from 'styled-components';
 import { Card } from './Card';
-
 import replyIcon from '../assets/icon-reply.svg';
+
 import Rating from './Rating/Rating';
-import NewReply from './NewReply';
+import CommentForm from './CommentForm';
 
 const User = styled.div`
   display: flex;
@@ -21,57 +22,66 @@ const User = styled.div`
     max-width: 100%;
     cursor: pointer;
   }
-
-  div {
-    margin-right: auto;
-  }
 `;
 
-const Reply = (props) => {
+const Actions = styled.div`
+  margin-left: auto;
+  display: flex;
+`;
+
+const CreatedAt = styled.div`
+  margin-right: auto;
+`;
+
+const Content = styled.div`
+  width: 100%;
+`;
+
+const Reply = ({ comment, deleteReply, currentUser, addReply }) => {
   const [isReplying, setIsReplying] = useState(false);
 
   const replyHandler = () => {
     setIsReplying(!isReplying);
   };
 
-  const { content, createdAt, id, score, username, replyingTo } = props;
-
-//   console.log(props.id);
-//   console.log(replyingTo);
-
-  // const updateReplies = (newReply) => {
-  //   console.log(newReply);
-  //   setRepliesList((oldList) => [...oldList, newReply]);
-  //   setIsReplying(!isReplying);
-  // };
+  const deleteReplyHandler = () => {
+    deleteReply(comment.id);
+  };
 
   return (
     <Fragment>
       <Card>
-        <Rating score={score} />
-        <div>
+        <Rating score={comment.score} />
+        <Content>
           <User>
             <figure>
-              <img src={props.picture} />
+              <img src={comment.user.image.png} />
             </figure>
-            <p>{username}</p>
-            <div>{createdAt}</div>
+            <p>{comment.user.username}</p>
+            <CreatedAt>{comment.createdAt}</CreatedAt>
+            {currentUser == comment.user.username ? (
+              <Actions>
+                <div>Edit</div>
+                <div onClick={deleteReplyHandler}>Delete</div>
+              </Actions>
+            ) : null}
             <figure onClick={replyHandler}>
               <img src={replyIcon} />
             </figure>
           </User>
           <p>
-            {props.replyingTo && <strong>@{props.replyingTo}</strong>} {content}
+            {comment.replyingTo && <strong>@{comment.replyingTo}</strong>}{' '}
+            {comment.content}
           </p>
-        </div>
+        </Content>
       </Card>
       {/* textarea to submit a new reply */}
       {isReplying && (
-        <NewReply
-          onAddReply={props.newReply}
-          replyingTo={username}
-          replyBox={replyHandler}
-          id={id}
+        <CommentForm
+          handleSubmit={addReply}
+          submitLabel="reply"
+          onClose={replyHandler}
+          replyingTo={comment.user.username}
         />
       )}
     </Fragment>

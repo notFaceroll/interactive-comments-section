@@ -1,12 +1,13 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment } from 'react';
+
 import styled from 'styled-components';
 import { Card } from './Card';
-
-import userProfilePic from '../assets/avatars/image-amyrobson.png';
 import replyIcon from '../assets/icon-reply.svg';
+
 import Rating from './Rating/Rating';
-import NewReply from './NewReply';
-import RepliesList from './RepliesList';
+import Reply from './Reply';
+import CommentForm from './CommentForm';
+import { CreateComment } from './Feed';
 
 const User = styled.div`
   display: flex;
@@ -24,59 +25,102 @@ const User = styled.div`
     cursor: pointer;
   }
 
-  div {
+  /* div {
     margin-right: auto;
-  }
+  } */
 `;
 
-const Comment = ({ comment, replies }) => {
-  // const { content, createdAt, id, score, username, replies } = comment;
+const Actions = styled.div`
+  display: flex;
+`;
 
+const CreatedAt = styled.div`
+  margin-right: auto;
+`;
+
+const Content = styled.div`
+  width: 100%;
+`;
+
+const Comment = ({
+  comment,
+  replies,
+  currentUserId,
+  deleteComment,
+  currentUser,
+}) => {
+  const [repliesList, setRepliesList] = useState(replies);
   const [isReplying, setIsReplying] = useState(false);
-  // const [repliesList, setRepliesList] = useState(replies);
 
   const replyHandler = () => {
     setIsReplying(!isReplying);
   };
 
-  // const updateReplies = (newReply) => {
-  //   console.log('updated');
-  //   setRepliesList(old => [...old, newReply]);
-  //   setIsReplying(!isReplying);
-  // };
+  const addReply = (text, replyingTo) => {
+    const newReply = CreateComment(text, replyingTo);
+    setRepliesList([...repliesList, newReply]);
+  };
 
+  const deleteCommentHandler = () => {
+    deleteComment(comment.id);
+  };
 
-  console.log(comment);
-  console.log(replies.replies);
+  const deleteReply = (replyId) => {
+    if (window.confirm('Are you sure that you want to remove this reply?')) {
+      {
+        const updatedRepliesList = repliesList.filter(
+          (reply) => reply.id !== replyId
+        );
+        setRepliesList(updatedRepliesList);
+      }
+    }
+  };
 
   return (
     <Fragment>
       <Card>
         <Rating score={comment.score} />
-        <div>
+        <Content>
           <User>
-            <figure><img src={comment.user.image.png} /></figure>
-            <p>{comment.username}</p>
-            <div>{comment.createdAt}</div>
+            <figure>
+              <img src={comment.user.image.png} />
+            </figure>
+            <p>{comment.user.username}</p>
+            <CreatedAt>{comment.createdAt}</CreatedAt>
+            {currentUser == comment.user.username ? (
+              <Actions>
+                <div>Edit</div>
+                <div onClick={deleteCommentHandler}>Delete</div>
+              </Actions>
+            ) : null}
             <figure onClick={replyHandler}>
               <img src={replyIcon} />
             </figure>
           </User>
-          <p>
-            {/*props.replyingTo && <strong>@{props.replyingTo}</strong>*/}{' '}
-            {comment.content}
-          </p>
-        </div>
+          <p>{comment.content}</p>
+        </Content>
       </Card>
       {/* textarea to submit a new reply */}
-      {/* {isReplying && (
-        <NewReply onAddReply={'updateReplies'} replyingTo={username} id={id} />
-      )} */}
+      {isReplying && (
+        <CommentForm
+          handleSubmit={addReply}
+          submitLabel="reply"
+          onClose={replyHandler}
+          replyingTo={comment.user.username}
+        />
+      )}
       {/* if it already has a reply, render it */}
-      {replies.length > 0 && (
+      {repliesList.length > 0 && (
         <ul>
-          {replies.map((item) => (
-            <Comment key={item.id} comment={item} replies={[]} />
+          {repliesList.map((item) => (
+            <Reply
+              key={item.id}
+              comment={item}
+              replies={[]}
+              deleteReply={deleteReply}
+              addReply={addReply}
+              currentUser={currentUser}
+            />
           ))}
         </ul>
       )}

@@ -3,7 +3,7 @@ import Feed from './components/Feed';
 
 function App() {
   return (
-   <Feed />
+   <Feed currentUserId='4'/>
   );
 }
 
