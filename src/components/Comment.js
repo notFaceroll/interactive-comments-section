@@ -29,56 +29,56 @@ const User = styled.div`
   }
 `;
 
-const Comment = (props) => {
+const Comment = ({ comment, replies }) => {
+  // const { content, createdAt, id, score, username, replies } = comment;
+
   const [isReplying, setIsReplying] = useState(false);
+  // const [repliesList, setRepliesList] = useState(replies);
 
   const replyHandler = () => {
     setIsReplying(!isReplying);
   };
 
-  const { content, date: createdAt, replies, id, score, username } = props;
-
-  const [repliesList, setRepliesList] = useState(replies);
-
-  console.log(repliesList.length);
-
   // const updateReplies = (newReply) => {
-  //   console.log(newReply);
-  //   setRepliesList((oldList) => [...oldList, newReply]);
+  //   console.log('updated');
+  //   setRepliesList(old => [...old, newReply]);
   //   setIsReplying(!isReplying);
   // };
+
+
+  console.log(comment);
+  console.log(replies.replies);
 
   return (
     <Fragment>
       <Card>
-        <Rating score={score} />
+        <Rating score={comment.score} />
         <div>
           <User>
-            <figure>
-              <img src={props.picture} />
-            </figure>
-            <p>{username}</p>
-            <div>{createdAt}</div>
+            <figure><img src={comment.user.image.png} /></figure>
+            <p>{comment.username}</p>
+            <div>{comment.createdAt}</div>
             <figure onClick={replyHandler}>
               <img src={replyIcon} />
             </figure>
           </User>
           <p>
-            {props.replyingTo && <strong>@{props.replyingTo}</strong>} {content}
+            {/*props.replyingTo && <strong>@{props.replyingTo}</strong>*/}{' '}
+            {comment.content}
           </p>
         </div>
       </Card>
       {/* textarea to submit a new reply */}
-      {isReplying && (
-        <NewReply
-          onAddReply={console.log('added')}
-          replyingTo={username}
-          id={id}
-        />
-      )}
+      {/* {isReplying && (
+        <NewReply onAddReply={'updateReplies'} replyingTo={username} id={id} />
+      )} */}
       {/* if it already has a reply, render it */}
-      {repliesList.length > 0 && (
-        <RepliesList replies={repliesList} />
+      {replies.length > 0 && (
+        <ul>
+          {replies.map((item) => (
+            <Comment key={item.id} comment={item} replies={[]} />
+          ))}
+        </ul>
       )}
     </Fragment>
   );

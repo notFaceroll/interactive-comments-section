@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Card } from './Card';
-import replyIcon from '../assets/icon-reply.svg';
-import Rating from './Rating/Rating';
-import NewReply from './NewReply';
+import Reply from './Reply';
 
 const User = styled.div`
   display: flex;
@@ -37,47 +34,42 @@ const List = styled.ul`
 
 // TODO: Arrumar um jeito de indetificar o card...
 // ... que será respondido e renderizar somente uma caixa de resposta
-
+// seta um ID pra cada reply, compara o ID da reply clicada com o da arry e abre a box?
 
 const RepliesList = (props) => {
-  console.log(props.replies);
+  // console.log(props.replies);
   const [reply, setIsReply] = useState(false);
+  const [repList, setRepList] = useState(props.replies);
+
+  console.log('list: ');
+  console.log(repList);
 
   const setNewReplyHandler = () => {
     setIsReply(!reply);
   };
+
+  const updateReplies = (newReply) => {
+    console.log(newReply);
+    setRepList((old) => [...old, newReply]);
+    setNewReplyHandler(!reply);
+    console.log(repList);
+  };
+
   return (
     <List>
-      {props.replies.map((item, index) => (
-        <>
-          <Card key={index}>
-            <Rating score={item.score} />
-            <div>
-              <User>
-                <figure>
-                  <img src={item.user.image.png} />
-                </figure>
-                <p>{item.user.username}</p>
-                <div>{item.createdAt}</div>
-                <figure onClick={setNewReplyHandler}>
-                  <img src={replyIcon} />
-                </figure>
-              </User>
-              <p>
-                {item.replyingTo && <strong>@{item.replyingTo}</strong>}{' '}
-                {item.content}
-              </p>
-            </div>
-          </Card>
-        </>
-      ))}
-      {reply && (
-        <NewReply
-          onAddReply={console.log('added')}
-          replyingTo={'username'}
-          id={'id'}
+      {repList.map((item, index) => (
+        <Reply
+          id={item.id}
+          key={index}
+          score={item.score}
+          picture={item.user.image.png}
+          username={item.user.username}
+          createdAt={item.createdAt}
+          replyingTo={item.replyingTo}
+          content={item.content}
+          newReply={updateReplies}
         />
-      )}
+      ))}
     </List>
   );
 };

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Comment from '../Comment';
 
 import { userData } from '../../assets/userData';
-import Reply from '../NewReply';
+import NewReply from '../NewReply';
 
 const comments = userData.comments;
 
@@ -25,23 +25,33 @@ const Feed = () => {
     setCommentsData(comments);
   }, []);
 
+  // for just a few comments, won't be a problem
+  // as the comment list enlarges, you prob should think about lazy loading
+  const getReplies = (commentId) => {
+    return commentsData.filter(
+      (singleComment) => singleComment.id === commentId
+    );
+  };
+
   // console.log('feed refresh');
   return (
     <List>
-      {commentsData.map((item, index) => (
+      {commentsData.map((comment, index) => (
         <Comment
           key={index}
-          index={index}
-          content={item.content}
-          date={item.createdAt}
-          id={item.id}
-          replies={item.replies}
-          score={item.score}
-          username={item.user.username}
-          picture={item.user.image.png}
+          // index={index}
+          // content={item.content}
+          // date={item.createdAt}
+          // id={item.id}
+          // replies={item.replies}
+          // score={item.score}
+          // username={item.user.username}
+          // picture={item.user.image.png}
+          comment={comment}
+          replies={getReplies(comment.id)}
         />
       ))}
-      <Reply label="send" />
+      <NewReply label="send" />
     </List>
   );
 };

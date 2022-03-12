@@ -30,14 +30,16 @@ const TextArea = styled.textarea`
 `;
 
 const NewReply = (props) => {
-  const userInputRef = useRef();
+  const { onAddReply, replyingTo, id, label } = props;
 
+  const userInputRef = useRef();
+  // console.log(replyingTo);
   const formSubmitHandler = (event) => {
     event.preventDefault();
     // where to send the input ?
     // userData.comments[id].replies.push ?
     const enteredData = userInputRef.current.value;
-    props.onAddReply({
+    onAddReply({
       id: props.id + 100,
       content: enteredData,
       createdAt: 'Just now',
@@ -51,7 +53,12 @@ const NewReply = (props) => {
         username: 'julisomo',
       },
     });
+    if (props.replyBox) {
+      props.replyBox();
+    }
   };
+
+  const defaultValue = replyingTo ? `@${replyingTo}` : null;
 
   return (
     <Card alignment="flex-start">
@@ -59,7 +66,11 @@ const NewReply = (props) => {
         <img src={userPicture} />
       </UserProfilePic>
       <Form onSubmit={formSubmitHandler}>
-        <TextArea placeholder="Add a comment..." ref={userInputRef}></TextArea>
+        <TextArea
+          placeholder="Add a comment..."
+          ref={userInputRef}
+          defaultValue={defaultValue}
+        />
         <GeneralButton
           type="submit"
           label={props.label ? props.label : 'reply'}
