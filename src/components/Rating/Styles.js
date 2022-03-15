@@ -9,7 +9,7 @@ export const ButtonHolder = styled.div`
   border-radius: 5px;
   height: 100%;
   padding: 0.5rem;
-  font-weight: bold;
+  font-weight: 400;
 `;
 
 export const Button = styled.button`
@@ -17,4 +17,7 @@ export const Button = styled.button`
   background-color: transparent;
   padding: .7rem;
   cursor: pointer;
+  &:disabled {
+    background-color: grey;
+  }
 `;

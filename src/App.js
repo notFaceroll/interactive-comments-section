@@ -1,9 +1,14 @@
+import { Fragment } from 'react';
 import './App.css';
 import Feed from './components/Feed';
+import GlobalStyle from './styles/themes/GlobalStyles';
 
 function App() {
   return (
-   <Feed currentUserId='4'/>
+    <Fragment>
+      <GlobalStyle />
+      <Feed currentUserId="4" />
+    </Fragment>
   );
 }
 

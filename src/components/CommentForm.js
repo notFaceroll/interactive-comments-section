@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import styled from 'styled-components';
 import { Card } from './Card';
 import userPicture from '../assets/avatars/image-juliusomo.png';
 
-import GeneralButton from './Button/Button';
+import FormArea from './FormArea';
 
 const UserProfilePic = styled.picture`
   width: 40px;
@@ -15,57 +15,18 @@ const UserProfilePic = styled.picture`
   }
 `;
 
-const Form = styled.form`
-  width: 100%;
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-`;
-
-const TextArea = styled.textarea`
-  width: 100%;
-  resize: none;
-  min-height: 70px;
-  border-radius: 5px;
-  padding: 0.5rem;
-`;
 const CommentForm = ({ handleSubmit, submitLabel, onClose, replyingTo }) => {
-  const [text, setText] = useState('');
-
-  const textInputHandler = (event) => {
-    setText(event.target.value);
-  };
-
-  const isDisabled = text.length === 0;
-
-  const formSubmitHandler = (event) => {
-    event.preventDefault();
-
-    handleSubmit(text, replyingTo);
-    setText('');
-
-    if (onClose) {
-      onClose();
-    }
-  };
-
   return (
     <Card alignment="flex-start">
       <UserProfilePic>
-        <img src={userPicture} />
+        <img src={userPicture} alt='user'/>
       </UserProfilePic>
-      <Form onSubmit={formSubmitHandler}>
-        <TextArea
-          placeholder="Add a comment..."
-          onChange={textInputHandler}
-          value={text}
-        />
-        <GeneralButton
-          type="submit"
-          label={submitLabel}
-          isDisabled={isDisabled}
-        />
-      </Form>
+      <FormArea
+        handleSubmit={handleSubmit}
+        submitLabel={submitLabel}
+        onClose={onClose}
+        replyingTo={replyingTo}
+      />
     </Card>
   );
 };

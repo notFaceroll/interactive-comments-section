@@ -8,6 +8,7 @@ import Rating from './Rating/Rating';
 import Reply from './Reply';
 import CommentForm from './CommentForm';
 import { CreateComment } from './Feed';
+import FormArea from './FormArea';
 
 const User = styled.div`
   display: flex;
@@ -42,18 +43,45 @@ const Content = styled.div`
   width: 100%;
 `;
 
+const List = styled.ul`
+  border-left: 2px solid hsl(239, 57%, 85%);
+  margin-left: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+// TODO: Create the updating logic for the reply and reply list
+
 const Comment = ({
   comment,
   replies,
   currentUserId,
   deleteComment,
   currentUser,
+  updateComment,
 }) => {
   const [repliesList, setRepliesList] = useState(replies);
   const [isReplying, setIsReplying] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const replyHandler = () => {
     setIsReplying(!isReplying);
+  };
+
+  const editCommentHandler = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const updateReply = (text, id) => {
+    const updatedReplies = repliesList.map((reply) => {
+      if (reply.id === id) {
+        return { ...reply, content: text };
+      }
+      return reply;
+    });
+
+    setRepliesList(updatedReplies);
   };
 
   const addReply = (text, replyingTo) => {
@@ -67,15 +95,12 @@ const Comment = ({
 
   const deleteReply = (replyId) => {
     if (window.confirm('Are you sure that you want to remove this reply?')) {
-      {
-        const updatedRepliesList = repliesList.filter(
-          (reply) => reply.id !== replyId
-        );
-        setRepliesList(updatedRepliesList);
-      }
+      const updatedRepliesList = repliesList.filter(
+        (reply) => reply.id !== replyId
+      );
+      setRepliesList(updatedRepliesList);
     }
   };
-
   return (
     <Fragment>
       <Card>
@@ -83,24 +108,34 @@ const Comment = ({
         <Content>
           <User>
             <figure>
-              <img src={comment.user.image.png} />
+              <img src={comment.user.image.png} alt="user profile" />
             </figure>
             <p>{comment.user.username}</p>
             <CreatedAt>{comment.createdAt}</CreatedAt>
-            {currentUser == comment.user.username ? (
+            {currentUser === comment.user.username ? (
               <Actions>
-                <div>Edit</div>
+                <div onClick={editCommentHandler}>Edit</div>
                 <div onClick={deleteCommentHandler}>Delete</div>
               </Actions>
             ) : null}
             <figure onClick={replyHandler}>
-              <img src={replyIcon} />
+              <img src={replyIcon} alt="" />
             </figure>
           </User>
-          <p>{comment.content}</p>
+          {!isEditing && <p>{comment.content}</p>}
+          {isEditing && (
+            <FormArea
+              submitLabel="update"
+              handleSubmit={updateComment}
+              hasCancelButton={true}
+              handleCancel={editCommentHandler}
+              initialText={comment.content}
+              commentId={comment.id}
+            />
+          )}
         </Content>
       </Card>
-      {/* textarea to submit a new reply */}
+      {/* Textarea to submit a new reply */}
       {isReplying && (
         <CommentForm
           handleSubmit={addReply}
@@ -109,9 +144,9 @@ const Comment = ({
           replyingTo={comment.user.username}
         />
       )}
-      {/* if it already has a reply, render it */}
+      {/* If it already has a reply, render it */}
       {repliesList.length > 0 && (
-        <ul>
+        <List>
           {repliesList.map((item) => (
             <Reply
               key={item.id}
@@ -120,9 +155,10 @@ const Comment = ({
               deleteReply={deleteReply}
               addReply={addReply}
               currentUser={currentUser}
+              updateReply={updateReply}
             />
           ))}
-        </ul>
+        </List>
       )}
     </Fragment>
   );

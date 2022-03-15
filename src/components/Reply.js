@@ -6,6 +6,7 @@ import replyIcon from '../assets/icon-reply.svg';
 
 import Rating from './Rating/Rating';
 import CommentForm from './CommentForm';
+import FormArea from './FormArea';
 
 const User = styled.div`
   display: flex;
@@ -37,8 +38,11 @@ const Content = styled.div`
   width: 100%;
 `;
 
-const Reply = ({ comment, deleteReply, currentUser, addReply }) => {
+// Pass the handlers to the form
+
+const Reply = ({ comment, deleteReply, currentUser, addReply, updateReply }) => {
   const [isReplying, setIsReplying] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const replyHandler = () => {
     setIsReplying(!isReplying);
@@ -48,6 +52,10 @@ const Reply = ({ comment, deleteReply, currentUser, addReply }) => {
     deleteReply(comment.id);
   };
 
+  const editReplyHandler = () => {
+    setIsEditing(!isEditing);
+  }
+
   return (
     <Fragment>
       <Card>
@@ -55,24 +63,36 @@ const Reply = ({ comment, deleteReply, currentUser, addReply }) => {
         <Content>
           <User>
             <figure>
-              <img src={comment.user.image.png} />
+              <img src={comment.user.image.png} alt='user'/>
             </figure>
             <p>{comment.user.username}</p>
             <CreatedAt>{comment.createdAt}</CreatedAt>
-            {currentUser == comment.user.username ? (
+            {currentUser === comment.user.username ? (
               <Actions>
-                <div>Edit</div>
+                <div onClick={editReplyHandler}>Edit</div>
                 <div onClick={deleteReplyHandler}>Delete</div>
               </Actions>
             ) : null}
             <figure onClick={replyHandler}>
-              <img src={replyIcon} />
+              <img src={replyIcon} alt=''/>
             </figure>
           </User>
-          <p>
-            {comment.replyingTo && <strong>@{comment.replyingTo}</strong>}{' '}
-            {comment.content}
-          </p>
+          {!isEditing && (
+            <p>
+              {comment.replyingTo && <strong>@{comment.replyingTo}</strong>}{' '}
+              {comment.content}
+            </p>
+          )}
+          {isEditing && (
+            <FormArea
+              submitLabel="update"
+              handleSubmit={updateReply}
+              hasCancelButton={true}
+              handleCancel={editReplyHandler}
+              initialText={comment.content}
+              commentId={comment.id}
+            />
+          )}
         </Content>
       </Card>
       {/* textarea to submit a new reply */}

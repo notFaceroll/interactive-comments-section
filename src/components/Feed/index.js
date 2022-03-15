@@ -8,12 +8,11 @@ import Comment from '../Comment';
 import CommentForm from '../CommentForm';
 import { userData } from '../../assets/userData';
 
-
 const comments = userData.comments;
 const currentUser = userData.currentUser.username;
 
 const List = styled.ul`
-  margin: 0 auto;
+  margin: 2rem auto;
   width: clamp(10rem, 40vw, 800px);
   list-style: none;
   display: flex;
@@ -55,24 +54,24 @@ const Feed = ({ currentUserId }) => {
     setCommentsData([...commentsData, newComment]);
   };
 
-  const ReplyComment = (text, commentId) => {
-    commentsData.filter((comment) => comment.id === commentId);
-    const newComment = CreateComment(text);
-    setCommentsData([...commentsData, newComment]);
+  const updateComment = (text, id) => {
+    const updatedComments = commentsData.map((comment) => {
+      if (comment.id === id) {
+        return { ...comment, content: text };
+      }
+      return comment;
+    });
+    setCommentsData(updatedComments);
   };
 
   const deleteComment = (commentId) => {
     if (window.confirm('Are you sure that you want to remove this comment?')) {
-      {
-        const updatedCommentList = commentsData.filter(
-          (comment) => comment.id !== commentId
-        );
-        setCommentsData(updatedCommentList);
-      }
-      console.log('deleted comment');
+      const updatedCommentList = commentsData.filter(
+        (comment) => comment.id !== commentId
+      );
+      setCommentsData(updatedCommentList);
     }
   };
-  
   return (
     <List>
       {commentsData.map((comment, index) => (
@@ -83,6 +82,7 @@ const Feed = ({ currentUserId }) => {
           currentUserId={currentUserId}
           deleteComment={deleteComment}
           currentUser={currentUser}
+          updateComment={updateComment}
         />
       ))}
       <CommentForm handleSubmit={addComment} submitLabel={'create'} />
