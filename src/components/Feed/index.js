@@ -13,11 +13,17 @@ const currentUser = userData.currentUser.username;
 
 const List = styled.ul`
   margin: 2rem auto;
-  width: clamp(10rem, 40vw, 800px);
+  width: clamp(10rem, 50vw, 800px);
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  transition: all .1s ease;
+  padding: 0;
+
+  @media screen and (max-width: 1100px) {
+    width: clamp(10rem, 80vw, 800px);
+  }
 `;
 
 export const CreateComment = (text, replyingTo) => {
@@ -65,12 +71,10 @@ const Feed = ({ currentUserId }) => {
   };
 
   const deleteComment = (commentId) => {
-    if (window.confirm('Are you sure that you want to remove this comment?')) {
       const updatedCommentList = commentsData.filter(
         (comment) => comment.id !== commentId
       );
       setCommentsData(updatedCommentList);
-    }
   };
   return (
     <List>
@@ -85,7 +89,7 @@ const Feed = ({ currentUserId }) => {
           updateComment={updateComment}
         />
       ))}
-      <CommentForm handleSubmit={addComment} submitLabel={'create'} />
+      <CommentForm handleSubmit={addComment} submitLabel={'send'} />
     </List>
   );
 };

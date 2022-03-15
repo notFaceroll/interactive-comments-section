@@ -15,6 +15,10 @@ const ButtonHolder = styled.div`
   height: 100%;
   padding: 0.5rem;
   font-weight: 400;
+  grid-row: 1 / 3;
+  grid-column: 1 / 2;
+  justify-self: center;
+  align-self: center;
 `;
 
 const Button = styled.button`

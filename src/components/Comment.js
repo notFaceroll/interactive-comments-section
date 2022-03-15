@@ -9,11 +9,22 @@ import Reply from './Reply';
 import CommentForm from './CommentForm';
 import { CreateComment } from './Feed';
 import FormArea from './FormArea';
+import { Modal } from './Modal';
+
+import trashBinIcon from '../assets/icon-delete.svg';
+import editIcon from '../assets/icon-edit.svg';
 
 const User = styled.div`
+  grid-row: 1 / 1;
+  grid-column: 2 / 6;
   display: flex;
   align-items: center;
   gap: 1rem;
+
+  p {
+    color: hsl(212, 24%, 26%);
+    font-weight: 500;
+  }
 
   figure {
     height: 35px;
@@ -23,24 +34,35 @@ const User = styled.div`
   img {
     display: block;
     max-width: 100%;
-    cursor: pointer;
   }
 
-  /* div {
-    margin-right: auto;
-  } */
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: ${(props) => props.theme.colors.primary.modarateBlue};
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
 `;
 
 const Actions = styled.div`
   display: flex;
+  gap: 0.75rem;
+  grid-column: 7 / -1;
+  grid-row: 1/ 2;
+  justify-self: end;
 `;
 
 const CreatedAt = styled.div`
   margin-right: auto;
+  color: hsl(211, 10%, 45%);
 `;
 
 const Content = styled.div`
-  width: 100%;
+  grid-column: 2 / -1;
+  grid-row: 2 / -1;
 `;
 
 const List = styled.ul`
@@ -50,8 +72,6 @@ const List = styled.ul`
   flex-direction: column;
   gap: 1rem;
 `;
-
-// TODO: Create the updating logic for the reply and reply list
 
 const Comment = ({
   comment,
@@ -64,6 +84,12 @@ const Comment = ({
   const [repliesList, setRepliesList] = useState(replies);
   const [isReplying, setIsReplying] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  const [showModal, setShowModal] = useState(false);
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
 
   const replyHandler = () => {
     setIsReplying(!isReplying);
@@ -94,46 +120,60 @@ const Comment = ({
   };
 
   const deleteReply = (replyId) => {
-    if (window.confirm('Are you sure that you want to remove this reply?')) {
-      const updatedRepliesList = repliesList.filter(
-        (reply) => reply.id !== replyId
-      );
-      setRepliesList(updatedRepliesList);
-    }
+    const updatedRepliesList = repliesList.filter(
+      (reply) => reply.id !== replyId
+    );
+    setRepliesList(updatedRepliesList);
   };
   return (
     <Fragment>
+      {showModal && (
+        <Modal delete={deleteCommentHandler} toggle={toggleModal} />
+      )}
       <Card>
         <Rating score={comment.score} />
-        <Content>
-          <User>
-            <figure>
-              <img src={comment.user.image.png} alt="user profile" />
-            </figure>
-            <p>{comment.user.username}</p>
-            <CreatedAt>{comment.createdAt}</CreatedAt>
-            {currentUser === comment.user.username ? (
-              <Actions>
-                <div onClick={editCommentHandler}>Edit</div>
-                <div onClick={deleteCommentHandler}>Delete</div>
-              </Actions>
-            ) : null}
-            <figure onClick={replyHandler}>
-              <img src={replyIcon} alt="" />
-            </figure>
-          </User>
-          {!isEditing && <p>{comment.content}</p>}
-          {isEditing && (
-            <FormArea
-              submitLabel="update"
-              handleSubmit={updateComment}
-              hasCancelButton={true}
-              handleCancel={editCommentHandler}
-              initialText={comment.content}
-              commentId={comment.id}
-            />
-          )}
-        </Content>
+        {/* <Content> */}
+        <User>
+          <figure>
+            <img src={comment.user.image.png} alt="user profile" />
+          </figure>
+          <p>{comment.user.username}</p>
+          <CreatedAt>{comment.createdAt}</CreatedAt>
+        </User>
+        {currentUser === comment.user.username ? (
+          <Actions>
+            <button onClick={editCommentHandler} className="user-actions">
+              <img src={editIcon} alt="" />
+              Edit
+            </button>
+            <button onClick={toggleModal} className="user-actions">
+              <img src={trashBinIcon} alt="" /> Delete
+            </button>
+          </Actions>
+        ) : (
+          <Actions>
+            <button onClick={replyHandler}>
+              <img src={replyIcon} alt="" /> Reply
+            </button>
+          </Actions>
+        )}
+        {/* <button onClick={replyHandler}>
+              <img src={replyIcon} alt="" /> Reply
+            </button> */}
+
+        {!isEditing && <Content>{comment.content}</Content>}
+        {isEditing && (
+          <FormArea
+            submitLabel="update"
+            handleSubmit={updateComment}
+            hasCancelButton={true}
+            handleCancel={editCommentHandler}
+            initialText={comment.content}
+            commentId={comment.id}
+            isEditing={isEditing}
+          />
+        )}
+        {/* </Content> */}
       </Card>
       {/* Textarea to submit a new reply */}
       {isReplying && (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import GeneralButton from './Button/Button';
 
 const Form = styled.form`
@@ -8,6 +8,12 @@ const Form = styled.form`
   display: flex;
   gap: 1rem;
   align-items: flex-start;
+  grid-column: 2 / -1;
+  ${({ isEditing }) =>
+    isEditing &&
+    css`
+      grid-row: ${({ theme }) => theme.gridColumns.editing};
+    `}
 `;
 
 const TextArea = styled.textarea`
@@ -16,6 +22,16 @@ const TextArea = styled.textarea`
   min-height: 70px;
   border-radius: 5px;
   padding: 0.5rem;
+  font-family: inherit;
+  font-size: inherit;
+`;
+
+const Cancel = styled.button`
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  color: ${({ theme }) => theme.colors.primary.modarateBlue};
 `;
 
 const FormArea = ({
@@ -63,9 +79,9 @@ const FormArea = ({
         isDisabled={isDisabled}
       />
       {hasCancelButton && (
-        <button type="button" onClick={handleCancel}>
-          Cancel
-        </button>
+        <Cancel type="button" onClick={handleCancel}>
+          X
+        </Cancel>
       )}
     </Form>
   );
