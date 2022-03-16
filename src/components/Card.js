@@ -8,7 +8,7 @@ export const Card = styled.li`
   gap: 1rem;
   /* display: flex; */
   display: grid;
-  grid-template-rows: 30% 1fr;
+  grid-template-rows: auto;
   grid-template-columns: repeat(8, 1fr);
   align-items: center;
   justify-items: start;
