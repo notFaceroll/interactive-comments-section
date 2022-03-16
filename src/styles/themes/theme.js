@@ -21,7 +21,8 @@ const theme = {
     },
     gridColumns: {
         editing: '2 / -1',
-        notEditing: '1 / -1'
+        notEditing: '1 / -1',
+        editingMobile: '1 / -1',
     }
 }
 

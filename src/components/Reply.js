@@ -1,79 +1,16 @@
 import React, { useState, Fragment } from 'react';
 
-import styled from 'styled-components';
 import { Card } from './Card';
 import replyIcon from '../assets/icon-reply.svg';
 import trashBinIcon from '../assets/icon-delete.svg';
 import editIcon from '../assets/icon-edit.svg';
 
-import Rating from './Rating/Rating';
+import Rating from './Rating';
 import CommentForm from './CommentForm';
 import FormArea from './FormArea';
 import { Modal } from './Modal';
 
-const User = styled.div`
-  /* display: flex;
-  align-items: center;
-  gap: 1rem;
-
-  figure {
-    height: 35px;
-    width: 35px;
-    margin: 0;
-  }
-  img {
-    display: block;
-    max-width: 100%;
-    cursor: pointer;
-  } */
-  grid-row: 1 / 1;
-  grid-column: 2 / 6;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-
-  p {
-    color: hsl(212, 24%, 26%);
-    font-weight: 500;
-  }
-
-  figure {
-    height: 35px;
-    width: 35px;
-    margin: 0;
-  }
-  img {
-    display: block;
-    max-width: 100%;
-  }
-
-  button {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: ${(props) => props.theme.colors.primary.modarateBlue};
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-  }
-`;
-
-const Actions = styled.div`
-  display: flex;
-  gap: 0.75rem;
-  grid-column: 7 / -1;
-  grid-row: 1/ 2;
-  justify-self: end;
-`;
-
-const CreatedAt = styled.div`
-  margin-right: auto;
-`;
-
-const Content = styled.div`
-  grid-column: 2 / -1;
-  grid-row: 2 / -1;
-`;
+import { User, Actions, CreatedAt, Content } from './CommentBaseElements';
 
 const Reply = ({
   comment,
@@ -106,16 +43,15 @@ const Reply = ({
     <Fragment>
       {showModal && <Modal delete={deleteReplyHandler} toggle={toggleModal} />}
       <Card>
-        <Rating score={comment.score} />
-
-        <User>
+        {!isEditing && <Rating score={comment.score} />}
+        {!isEditing && <User>
           <figure>
             <img src={comment.user.image.png} alt="user" />
           </figure>
           <p>{comment.user.username}</p>
           <CreatedAt>{comment.createdAt}</CreatedAt>
-        </User>
-        {currentUser === comment.user.username ? (
+        </User>}
+        {currentUser === comment.user.username && !isEditing && (
           <Actions>
             <button onClick={editReplyHandler} className="user-actions">
               <img src={editIcon} alt="" />
@@ -125,9 +61,10 @@ const Reply = ({
               <img src={trashBinIcon} alt="" /> Delete
             </button>
           </Actions>
-        ) : (
-          <Actions>
-            <button onClick={replyHandler}>
+        ) } 
+        {currentUser !== comment.user.username &&
+          (<Actions>
+            <button onClick={replyHandler} className="user-actions">
               <img src={replyIcon} alt="" /> Reply
             </button>
           </Actions>
@@ -135,8 +72,10 @@ const Reply = ({
 
         {!isEditing && (
           <Content>
-            {comment.replyingTo && <strong>@{comment.replyingTo}</strong>}{' '}
-            {comment.content}
+            <p>
+              {comment.replyingTo && <strong>@{comment.replyingTo}</strong>}{' '}
+              {comment.content}
+            </p>
           </Content>
         )}
         {isEditing && (
@@ -147,6 +86,7 @@ const Reply = ({
             handleCancel={editReplyHandler}
             initialText={comment.content}
             commentId={comment.id}
+            isEditing={isEditing}
           />
         )}
       </Card>

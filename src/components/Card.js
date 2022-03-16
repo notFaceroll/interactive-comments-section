@@ -22,7 +22,10 @@ export const Card = styled.li`
   strong {
     color: blue;
   }
-`;
 
+  @media screen and (max-width: 400px) {
+    grid-template-columns: repeat(8, 1fr);
+  }
+`;
 
 // align-items: ${(props) => (props.alignment ? props.alignment : 'center')};

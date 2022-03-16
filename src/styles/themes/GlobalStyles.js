@@ -4,7 +4,7 @@ const GlobalStyle = createGlobalStyle`
 body {
     background-color: ${({ theme }) => theme.colors.neutral.veryLightGrey};
     font-family: 'Rubik', sans-serif;
-    font-size: clamp(.8rem, 1.8vw, 1rem);
+    font-size: clamp(.75rem, 1.8vw, 1rem);
 }
 
 button.user-actions {
@@ -15,9 +15,16 @@ button.user-actions {
     color: ${({ theme }) => theme.colors.primary.modarateBlue};
     border: none;
     background-color: transparent;
+    &:hover {
+        color: ${({ theme }) => theme.colors.primary.lightBlue};
+    }
 
     & + & {
         color: ${({ theme }) => theme.colors.primary.softRed};
+    }
+
+    & + &:hover {
+        color: ${({ theme }) => theme.colors.primary.paleRed};
     }
 }`;
 

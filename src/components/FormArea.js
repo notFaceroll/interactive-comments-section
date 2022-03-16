@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 
 import styled, { css } from 'styled-components';
-import GeneralButton from './Button/Button';
+import GeneralButton from './Button';
+
+// ${({ isEditing }) =>
+//     isEditing &&
+//     css`
+//       grid-row: ${({ theme }) => theme.gridColumns.editing};
+//     `}
 
 const Form = styled.form`
   width: 100%;
@@ -14,6 +20,18 @@ const Form = styled.form`
     css`
       grid-row: ${({ theme }) => theme.gridColumns.editing};
     `}
+
+  @media screen and (max-width: 500px) {
+    flex-direction: column;
+    grid-row: 1 / 3;
+  }
+`;
+
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
 `;
 
 const TextArea = styled.textarea`
@@ -24,14 +42,16 @@ const TextArea = styled.textarea`
   padding: 0.5rem;
   font-family: inherit;
   font-size: inherit;
+  box-sizing: border-box;
 `;
 
 const Cancel = styled.button`
   border: 0;
   background-color: transparent;
   cursor: pointer;
-  font-size: 1rem;
-  color: ${({ theme }) => theme.colors.primary.modarateBlue};
+  font-size: .8rem;
+  color: ${({ theme }) => theme.colors.primary.softRed};
+  margin-left: 1rem;
 `;
 
 const FormArea = ({
@@ -73,16 +93,18 @@ const FormArea = ({
         onChange={textInputHandler}
         value={text}
       />
-      <GeneralButton
-        type="submit"
-        label={submitLabel}
-        isDisabled={isDisabled}
-      />
-      {hasCancelButton && (
-        <Cancel type="button" onClick={handleCancel}>
-          X
-        </Cancel>
-      )}
+      <Container>
+        <GeneralButton
+          type="submit"
+          label={submitLabel}
+          isDisabled={isDisabled}
+        />
+        {hasCancelButton && (
+          <Cancel type="button" onClick={handleCancel}>
+            Cancel
+          </Cancel>
+        )}
+      </Container>
     </Form>
   );
 };

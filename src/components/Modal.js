@@ -21,9 +21,9 @@ const Container = styled.div`
   background-color: #fff;
   margin: 0 auto;
   align-items: center;
-  padding: 1.75rem;
+  padding: 25px;
   border-radius: 10px;
-  width: 350px;
+  width: clamp(250px, 50vw, 500px);
 
   strong {
     font-size: 1.5rem;
@@ -37,7 +37,7 @@ const Container = styled.div`
 
   button {
     margin: 0 1rem;
-    padding: 0.75rem 1.25rem;
+    padding: 0.75em 1em;
     border: 0;
     border-radius: 7px;
     text-transform: uppercase;
@@ -50,6 +50,14 @@ const Container = styled.div`
 
   button + button {
     background-color: ${( props ) => props.theme.colors.primary.softRed};
+  }
+
+  @media screen and (max-width: 600px) {
+    button {
+      letter-spacing: .75px;
+      padding: 0.5em .75em;
+      margin: 0 .7rem;
+    }
   }
 `;
 

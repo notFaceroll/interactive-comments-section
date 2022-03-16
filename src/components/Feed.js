@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
 import styled from 'styled-components';
-import userJul1 from '../../assets/avatars/image-juliusomo.png';
-import userJul2 from '../../assets/avatars/image-juliusomo.webp';
+import userJul1 from '../assets/avatars/image-juliusomo.png';
+import userJul2 from '../assets/avatars/image-juliusomo.webp';
 
-import Comment from '../Comment';
-import CommentForm from '../CommentForm';
-import { userData } from '../../assets/userData';
+import Comment from './Comment';
+import CommentForm from './CommentForm';
+import { userData } from '../assets/userData';
+
+import {useLocalStorage} from '../hooks/useLocalStorage'
 
 const comments = userData.comments;
 const currentUser = userData.currentUser.username;
@@ -47,8 +49,13 @@ export const CreateComment = (text, replyingTo) => {
 const Feed = ({ currentUserId }) => {
   const [commentsData, setCommentsData] = useState([]);
 
+  const [data, setData] = useLocalStorage("comments", comments);
+
+  console.log(data);
+
   useEffect(() => {
-    setCommentsData(comments);
+    // setCommentsData(comments);
+    // setData(comments);
   }, []);
 
   const getReplies = (comment) => {
@@ -57,28 +64,31 @@ const Feed = ({ currentUserId }) => {
 
   const addComment = (text) => {
     const newComment = CreateComment(text);
-    setCommentsData([...commentsData, newComment]);
+    // setCommentsData([...commentsData, newComment]);
+    setData([...data, newComment]);
   };
 
   const updateComment = (text, id) => {
-    const updatedComments = commentsData.map((comment) => {
+    const updatedComments = data.map((comment) => {
       if (comment.id === id) {
         return { ...comment, content: text };
       }
       return comment;
     });
-    setCommentsData(updatedComments);
+    // setCommentsData(updatedComments);
+    setData(updatedComments);
   };
 
   const deleteComment = (commentId) => {
-      const updatedCommentList = commentsData.filter(
+      const updatedCommentList = data.filter(
         (comment) => comment.id !== commentId
       );
-      setCommentsData(updatedCommentList);
+      // setCommentsData(updatedCommentList);
+      setData(updatedCommentList);
   };
   return (
     <List>
-      {commentsData.map((comment, index) => (
+      {data.map((comment, index) => (
         <Comment
           key={index}
           comment={comment}
