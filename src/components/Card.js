@@ -6,7 +6,6 @@ export const Card = styled.li`
   border-radius: 10px;
   padding: 1rem;
   gap: 1rem;
-  /* display: flex; */
   display: grid;
   grid-template-rows: auto;
   grid-template-columns: repeat(8, 1fr);
