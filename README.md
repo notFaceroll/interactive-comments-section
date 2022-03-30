@@ -1,6 +1,6 @@
-# Frontend Mentor - Interactive comments section solution
+# Interactive comments section
 
-This is a solution to the [Interactive comments section challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/interactive-comments-section-iG1RugEG9). Frontend Mentor challenges help you improve your coding skills by building realistic projects. 
+This is a solution to the [Interactive comments section challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/interactive-comments-section-iG1RugEG9). 
 
 ## Table of contents
 
@@ -13,8 +13,6 @@ This is a solution to the [Interactive comments section challenge on Frontend Me
   - [What I learned](#what-i-learned)
   - [Continued development](#continued-development)
   - [Useful resources](#useful-resources)
-- [Author](#author)
-
 
 ## Overview
 
@@ -43,10 +41,6 @@ Users should be able to:
 
 ### Built with
 
-- Semantic HTML5 markup
-- CSS custom properties
-- Flexbox
-- CSS Grid
 - Desktop-first workflow
 - [React](https://reactjs.org/) - JS library
 - [Styled Components](https://styled-components.com/) - For styles
@@ -69,7 +63,3 @@ More and more docs/articles/examples to read, and also practice. Looking forward
 - [CSS-Tricks](https://css-tricks.com/theming-and-theme-switching-with-react-and-styled-components/) - good article about Theming on styled-components.
 - [useHooks](https://usehooks.com/useLocalStorage/) - too many good stuff there, used their 'useLocalStorage' hook from this article.
 
-
-## Author
-
-- Frontend Mentor - [@notFaceroll](https://www.frontendmentor.io/profile/notFaceroll)
